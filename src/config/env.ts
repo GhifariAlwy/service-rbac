@@ -34,6 +34,8 @@ const envSchema = z.object({
   REFRESH_COOKIE_PATH: z.string().min(1).default('/api/auth'),
   SMTP_HOST: z.string().min(1).default('mailhog'),
   SMTP_PORT: z.coerce.number().int().positive().default(1025),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASS: z.string().optional(),
   MAIL_FROM: z.string().min(1).default('no-reply@beasiswa.local'),
   APP_BASE_URL: z.string().url().default('http://localhost:5173'),
 });

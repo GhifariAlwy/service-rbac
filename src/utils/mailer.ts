@@ -12,12 +12,20 @@ let transporter: Transporter | null = null;
 
 function getTransporter(): Transporter {
   if (transporter === null) {
+    const auth = env.SMTP_USER && env.SMTP_PASS
+      ? { user: env.SMTP_USER, pass: env.SMTP_PASS }
+      : undefined;
+
     transporter = createTransport({
       host: env.SMTP_HOST,
       port: env.SMTP_PORT,
-      // MailHog tidak memakai TLS maupun autentikasi.
-      secure: false,
-      ignoreTLS: true,
+      secure: env.SMTP_PORT === 465,
+      auth,
+      tls: {
+        // Jika menggunakan SMTP real, biasanya butuh TLS.
+        // Jika MailHog, kita abaikan TLS.
+        rejectUnauthorized: env.SMTP_HOST !== 'mailhog',
+      },
     });
   }
   return transporter;
